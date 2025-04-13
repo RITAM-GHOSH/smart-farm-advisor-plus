@@ -1,0 +1,238 @@
+
+import { FlaskConical, AlertCircle, Check, X } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+
+interface FertilizerResultsProps {
+  results: any;
+}
+
+const FertilizerResults = ({ results }: FertilizerResultsProps) => {
+  // In a real app, this would be calculated by the prediction model
+  const recommendations = [
+    {
+      name: "Nitrogen (N)",
+      formula: "Urea (46-0-0)",
+      currentLevel: 35,
+      optimalLevel: 60,
+      recommended: 45,
+      units: "kg/ha",
+      deficient: true
+    },
+    {
+      name: "Phosphorus (P)",
+      formula: "Single Super Phosphate (0-16-0)",
+      currentLevel: 25,
+      optimalLevel: 30,
+      recommended: 20,
+      units: "kg/ha",
+      deficient: true
+    },
+    {
+      name: "Potassium (K)",
+      formula: "Muriate of Potash (0-0-60)",
+      currentLevel: 30,
+      optimalLevel: 25,
+      recommended: 0,
+      units: "kg/ha",
+      deficient: false
+    },
+  ];
+
+  const totalFieldSize = 5; // hectares
+  const totalCost = 3500; // rupees
+
+  const applicationSchedule = [
+    {
+      stage: "Pre-Sowing",
+      time: "1-2 weeks before planting",
+      nutrients: "50% P, 50% K",
+      method: "Broadcast and incorporate into soil"
+    },
+    {
+      stage: "Planting",
+      time: "At time of sowing",
+      nutrients: "25% N",
+      method: "Band placement 5cm below and beside seed"
+    },
+    {
+      stage: "Vegetative Growth",
+      time: "30-40 days after emergence",
+      nutrients: "50% N",
+      method: "Side dressing or fertigation"
+    },
+    {
+      stage: "Pre-Flowering",
+      time: "Just before flowering",
+      nutrients: "25% N, 50% P, 50% K",
+      method: "Foliar spray or side dressing"
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold mb-4">Fertilizer Recommendations</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Nutrient Recommendations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-5">
+              {recommendations.map((rec, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center mr-2 bg-primary/10">
+                        <span className="font-bold text-primary">{rec.name.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium">{rec.name}</h4>
+                        <p className="text-xs text-muted-foreground">{rec.formula}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      {rec.deficient ? (
+                        <div className="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded flex items-center">
+                          <AlertCircle size={12} className="mr-1" />
+                          Deficient
+                        </div>
+                      ) : (
+                        <div className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded flex items-center">
+                          <Check size={12} className="mr-1" />
+                          Sufficient
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span>Current: {rec.currentLevel} {rec.units}</span>
+                      <span>Optimal: {rec.optimalLevel} {rec.units}</span>
+                    </div>
+                    <Progress 
+                      value={(rec.currentLevel / rec.optimalLevel) * 100} 
+                      className="h-2" 
+                    />
+                  </div>
+                  
+                  {rec.recommended > 0 && (
+                    <div className="bg-muted/50 p-2 rounded-md">
+                      <span className="text-sm font-medium">
+                        Recommended Application: {rec.recommended} {rec.units}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6 pt-4 border-t space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm">Total Field Size:</span>
+                <span className="font-medium">{totalFieldSize} hectares</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Estimated Total Cost:</span>
+                <span className="font-medium">₹{totalCost}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Cost per Hectare:</span>
+                <span className="font-medium">₹{totalCost / totalFieldSize}</span>
+              </div>
+            </div>
+            
+            <Button className="w-full mt-4">Generate Purchase Order</Button>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Application Schedule</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {applicationSchedule.map((stage, index) => (
+                <div key={index} className="border-l-2 border-primary pl-4 pb-4 relative">
+                  <div className="w-3 h-3 bg-primary rounded-full absolute -left-[6.5px]"></div>
+                  <h4 className="text-sm font-medium">{stage.stage}</h4>
+                  <p className="text-xs text-muted-foreground mb-1">{stage.time}</p>
+                  <div className="bg-muted/50 p-2 rounded-md space-y-1">
+                    <div className="flex items-center text-xs">
+                      <FlaskConical size={12} className="mr-1 text-primary" />
+                      <span>Nutrients: {stage.nutrients}</span>
+                    </div>
+                    <div className="text-xs">Method: {stage.method}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-4 pt-4 border-t space-y-3">
+              <h4 className="text-sm font-medium">Best Practices</h4>
+              <ul className="text-xs space-y-2">
+                <li className="flex items-start">
+                  <Check size={14} className="mr-1 text-green-600 mt-0.5" />
+                  <span>Apply fertilizers when soil is moist but not waterlogged</span>
+                </li>
+                <li className="flex items-start">
+                  <Check size={14} className="mr-1 text-green-600 mt-0.5" />
+                  <span>Avoid application before heavy rainfall to prevent runoff</span>
+                </li>
+                <li className="flex items-start">
+                  <X size={14} className="mr-1 text-red-500 mt-0.5" />
+                  <span>Don't apply on very hot days to prevent volatilization losses</span>
+                </li>
+                <li className="flex items-start">
+                  <Check size={14} className="mr-1 text-green-600 mt-0.5" />
+                  <span>Consider split applications to improve nutrient uptake efficiency</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="flex space-x-2 mt-4">
+              <Button variant="outline" className="flex-1">Download Guide</Button>
+              <Button variant="outline" className="flex-1">Set Reminders</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Projected Benefits</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h4 className="text-sm font-medium text-green-700 mb-1">Yield Improvement</h4>
+              <p className="text-2xl font-bold text-green-700">+12-15%</p>
+              <p className="text-xs text-green-600 mt-1">
+                Balanced nutrition can increase your crop yield by up to 15% compared to current practices.
+              </p>
+            </div>
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="text-sm font-medium text-blue-700 mb-1">Cost Savings</h4>
+              <p className="text-2xl font-bold text-blue-700">₹4,500/ha</p>
+              <p className="text-xs text-blue-600 mt-1">
+                Precision application reduces wastage and improves fertilizer use efficiency.
+              </p>
+            </div>
+            <div className="bg-amber-50 p-4 rounded-lg">
+              <h4 className="text-sm font-medium text-amber-700 mb-1">Soil Health</h4>
+              <p className="text-2xl font-bold text-amber-700">Improved</p>
+              <p className="text-xs text-amber-600 mt-1">
+                Balanced fertilization helps maintain long-term soil fertility and structure.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default FertilizerResults;
