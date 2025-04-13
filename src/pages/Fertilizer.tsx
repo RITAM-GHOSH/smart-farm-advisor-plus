@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import FertilizerForm from "@/components/fertilizer/FertilizerForm";
 import FertilizerResults from "@/components/fertilizer/FertilizerResults";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { FlaskConical, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
