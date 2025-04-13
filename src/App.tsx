@@ -16,17 +16,19 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/crop-prediction" element={<CropPrediction />} />
-        <Route path="/fertilizer" element={<Fertilizer />} />
-        <Route path="/rainfall" element={<Rainfall />} />
-        <Route path="/yield" element={<Yield />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <BrowserRouter>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/crop-prediction" element={<CropPrediction />} />
+          <Route path="/fertilizer" element={<Fertilizer />} />
+          <Route path="/rainfall" element={<Rainfall />} />
+          <Route path="/yield" element={<Yield />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
