@@ -1,23 +1,42 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CropForm from "@/components/crop-prediction/CropForm";
 import CropResults from "@/components/crop-prediction/CropResults";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sprout, ArrowLeft } from 'lucide-react';
+import { Sprout, ArrowLeft, Info } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 const CropPrediction = () => {
   const [predictionData, setPredictionData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("input");
   
+  // When returning from results to input, maintain data
+  useEffect(() => {
+    if (activeTab === "input" && predictionData) {
+      toast.info("Previous data retained", {
+        description: "Your previous inputs are still available. You can make adjustments as needed.",
+        duration: 3000,
+      });
+    }
+  }, [activeTab, predictionData]);
+
   const handleFormSubmit = (data: any) => {
     // In a real application, this would call an API to get predictions
     console.log("Form data submitted:", data);
     setPredictionData(data);
     setActiveTab("results");
+    
+    toast.success("Crop prediction complete", {
+      description: "Based on your inputs, we've identified the best crops for your land conditions.",
+    });
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
 
   return (
@@ -48,7 +67,7 @@ const CropPrediction = () => {
           <div className="mb-8">
             <Tabs 
               value={activeTab} 
-              onValueChange={setActiveTab}
+              onValueChange={handleTabChange}
               className="w-full"
             >
               <TabsList className="w-full max-w-md mx-auto">
@@ -64,14 +83,13 @@ const CropPrediction = () => {
               
               <TabsContent value="input" className="mt-6">
                 <div className="max-w-4xl mx-auto">
-                  {!predictionData && (
-                    <Alert className="mb-6 bg-farm-sprout/10 border-farm-sprout/20">
-                      <AlertDescription>
-                        Fill in your soil and environmental parameters below to get personalized crop recommendations 
-                        best suited for your farming conditions.
-                      </AlertDescription>
-                    </Alert>
-                  )}
+                  <Alert className="mb-6 bg-farm-sprout/10 border-farm-sprout/20">
+                    <Info className="h-4 w-4 text-farm-sprout" />
+                    <AlertDescription>
+                      Fill in your soil and environmental parameters below to get personalized crop recommendations 
+                      best suited for your farming conditions.
+                    </AlertDescription>
+                  </Alert>
                 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div className="farm-card">
@@ -105,11 +123,11 @@ const CropPrediction = () => {
                     </div>
                   </div>
                   
-                  <CropForm onSubmit={handleFormSubmit} />
+                  <CropForm onSubmit={handleFormSubmit} initialData={predictionData} />
                 </div>
               </TabsContent>
               
-              <TabsContent value="results" className="mt-6">
+              <TabsContent value="results" className="mt-6 animate-fade-in">
                 {predictionData && <CropResults results={predictionData} />}
               </TabsContent>
             </Tabs>
