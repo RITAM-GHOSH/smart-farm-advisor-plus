@@ -1,12 +1,17 @@
-import { Sprout, Droplets, ThermometerSun, Leaf } from "lucide-react";
+
+import { Sprout, Droplets, ThermometerSun, Leaf, Award, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useState } from "react";
 
 interface CropResultsProps {
   results: any;
 }
 
 const CropResults = ({ results }: CropResultsProps) => {
+  const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
+
   const recommendedCrops = [
     {
       name: "Wheat",
@@ -50,13 +55,44 @@ const CropResults = ({ results }: CropResultsProps) => {
     rainfall: "The expected rainfall pattern matches well with wheat's water requirements."
   };
 
+  const handleSelectCrop = (cropName: string) => {
+    setSelectedCrop(cropName);
+    toast.success(`${cropName} selected as your recommended crop`);
+  };
+
+  const handleDownloadReport = () => {
+    toast.success("Report downloaded successfully");
+  };
+
+  const handleAdjustParameters = () => {
+    toast("Returning to input parameters", {
+      description: "Adjust your inputs to get different recommendations",
+    });
+  };
+
+  const handleGetPlantingGuide = () => {
+    toast.success("Planting guide generated", {
+      description: `Your personalized planting guide for ${selectedCrop || "your selected crop"} is ready.`,
+      action: {
+        label: "View Guide",
+        onClick: () => console.log("View guide clicked"),
+      },
+    });
+  };
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold mb-4">Recommended Crops for Your Land</h2>
+    <div className="space-y-6 animate-fade-in">
+      <h2 className="text-xl font-semibold mb-4 flex items-center">
+        <Award className="mr-2 text-farm-wheat" size={20} />
+        Recommended Crops for Your Land
+      </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {recommendedCrops.map((crop, index) => (
-          <Card key={index} className={index === 0 ? "border-primary border-2" : ""}>
+          <Card 
+            key={index} 
+            className={`${index === 0 ? "border-primary border-2" : ""} transition-all duration-200 hover:shadow-md ${selectedCrop === crop.name ? "ring-2 ring-primary" : ""}`}
+          >
             <CardHeader className="pb-2">
               <CardTitle className="flex justify-between items-center text-lg">
                 <span>{crop.name}</span>
@@ -94,12 +130,23 @@ const CropResults = ({ results }: CropResultsProps) => {
                 </div>
               </div>
               
-              {index === 0 && (
-                <Button className="w-full mt-4" size="sm">Select This Crop</Button>
-              )}
-              
-              {index > 0 && (
-                <Button variant="outline" className="w-full mt-4" size="sm">View Details</Button>
+              {index === 0 || selectedCrop === crop.name ? (
+                <Button 
+                  className="w-full mt-4" 
+                  size="sm"
+                  onClick={() => handleSelectCrop(crop.name)}
+                >
+                  {selectedCrop === crop.name ? "Selected" : "Select This Crop"}
+                </Button>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-4" 
+                  size="sm"
+                  onClick={() => handleSelectCrop(crop.name)}
+                >
+                  View Details
+                </Button>
               )}
             </CardContent>
           </Card>
@@ -132,12 +179,24 @@ const CropResults = ({ results }: CropResultsProps) => {
             <h4 className="text-sm font-medium mb-2">Next Steps</h4>
             <p className="text-xs text-muted-foreground mb-3">
               Based on these recommendations, you can now plan your planting schedule. 
-              For wheat, the ideal planting window would be in the next 2-3 weeks to maximize yield potential.
+              {selectedCrop ? ` For ${selectedCrop}, the ideal planting window would be in the next 2-3 weeks to maximize yield potential.` : " Select a crop above to get specific planting guidance."}
             </p>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm">Download Report</Button>
-              <Button variant="outline" size="sm">Adjust Parameters</Button>
-              <Button size="sm">Get Planting Guide</Button>
+              <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                Download Report
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleAdjustParameters}>
+                Adjust Parameters
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={handleGetPlantingGuide}
+                disabled={!selectedCrop}
+                className="flex items-center"
+              >
+                Get Planting Guide
+                <ArrowRight size={16} className="ml-1" />
+              </Button>
             </div>
           </div>
         </CardContent>

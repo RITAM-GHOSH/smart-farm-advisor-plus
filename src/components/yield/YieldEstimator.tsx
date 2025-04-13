@@ -6,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3, Eye, TrendingUp, ArrowUpRight } from "lucide-react";
+import { BarChart3, Eye, TrendingUp, ArrowUpRight, Info, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const YieldEstimator = () => {
   const [showResults, setShowResults] = useState(false);
@@ -22,6 +23,7 @@ const YieldEstimator = () => {
     expectedTemperature: 30,
     pestRisk: 20
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -36,12 +38,23 @@ const YieldEstimator = () => {
     
     // Validate form data
     if (!formData.crop || !formData.variety || !formData.plantingDate) {
-      toast.error("Please fill in all required fields");
+      toast.error("Please fill in all required fields", {
+        description: "Crop type, variety, and planting date are required"
+      });
       return;
     }
     
-    setShowResults(true);
-    toast.success("Yield estimation complete");
+    // Show loading state
+    setIsLoading(true);
+    
+    // Simulate API call with setTimeout
+    setTimeout(() => {
+      setShowResults(true);
+      setIsLoading(false);
+      toast.success("Yield estimation complete", {
+        description: "Your crop yield analysis is ready for review"
+      });
+    }, 1500);
   };
 
   // Mock calculated yield estimation - this would come from an ML model in a real app
@@ -88,6 +101,30 @@ const YieldEstimator = () => {
     return varietyOptions[formData.crop as keyof typeof varietyOptions] || [];
   };
 
+  const handleResetForm = () => {
+    if (showResults) {
+      setShowResults(false);
+      toast("Form reset", {
+        description: "You can make changes to your inputs"
+      });
+    }
+  };
+
+  const handleDownloadReport = () => {
+    toast.success("Report downloaded successfully", {
+      action: {
+        label: "View",
+        onClick: () => console.log("View report clicked"),
+      },
+    });
+  };
+
+  const handleOptimizeYield = () => {
+    toast.success("Optimization suggestions generated", {
+      description: "We've analyzed your data and prepared recommendations to maximize your yield",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-2">
@@ -95,13 +132,25 @@ const YieldEstimator = () => {
         <h2 className="text-xl font-semibold">Crop Yield Estimator</h2>
       </div>
 
+      {!showResults && (
+        <Alert className="bg-farm-wheat/10 border-farm-wheat/20">
+          <Info className="h-4 w-4 text-farm-wheat" />
+          <AlertDescription>
+            Complete the form below with accurate data to get the most precise yield estimation.
+            Required fields are marked with an asterisk (*).
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <form onSubmit={handleSubmit} className="data-input">
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="crop" className="required">Crop Type</Label>
+                  <Label htmlFor="crop" className="flex items-center">
+                    Crop Type <span className="text-destructive ml-1">*</span>
+                  </Label>
                   <Select 
                     value={formData.crop} 
                     onValueChange={(value) => {
@@ -123,7 +172,9 @@ const YieldEstimator = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="variety" className="required">Variety</Label>
+                  <Label htmlFor="variety" className="flex items-center">
+                    Variety <span className="text-destructive ml-1">*</span>
+                  </Label>
                   <Select 
                     value={formData.variety} 
                     onValueChange={(value) => handleChange("variety", value)}
@@ -169,7 +220,9 @@ const YieldEstimator = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="plantingDate" className="required">Planting Date</Label>
+                  <Label htmlFor="plantingDate" className="flex items-center">
+                    Planting Date <span className="text-destructive ml-1">*</span>
+                  </Label>
                   <Input 
                     id="plantingDate"
                     type="date" 
@@ -270,7 +323,24 @@ const YieldEstimator = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full">Calculate Estimated Yield</Button>
+              <div className="flex gap-3">
+                <Button 
+                  type="submit" 
+                  className="flex-1"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Calculating..." : "Calculate Estimated Yield"}
+                </Button>
+                {showResults && (
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={handleResetForm}
+                  >
+                    Edit Inputs
+                  </Button>
+                )}
+              </div>
             </div>
           </form>
         </div>
@@ -287,7 +357,7 @@ const YieldEstimator = () => {
               </CardContent>
             </Card>
           ) : (
-            <Card>
+            <Card className="animate-fade-in">
               <CardContent className="pt-6">
                 <div className="text-center mb-6">
                   <TrendingUp size={36} className="mx-auto text-primary mb-2" />
@@ -342,8 +412,12 @@ const YieldEstimator = () => {
                   </div>
                   
                   <div className="flex space-x-2 mt-4">
-                    <Button variant="outline" className="flex-1">Download Report</Button>
-                    <Button className="flex-1">Optimize Yield</Button>
+                    <Button variant="outline" className="flex-1" onClick={handleDownloadReport}>
+                      Download Report
+                    </Button>
+                    <Button className="flex-1" onClick={handleOptimizeYield}>
+                      Optimize Yield
+                    </Button>
                   </div>
                 </div>
               </CardContent>

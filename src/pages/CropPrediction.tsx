@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -6,14 +7,17 @@ import CropResults from "@/components/crop-prediction/CropResults";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sprout, ArrowLeft } from 'lucide-react';
 import { Link } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const CropPrediction = () => {
   const [predictionData, setPredictionData] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("input");
   
   const handleFormSubmit = (data: any) => {
     // In a real application, this would call an API to get predictions
     console.log("Form data submitted:", data);
     setPredictionData(data);
+    setActiveTab("results");
   };
 
   return (
@@ -42,7 +46,11 @@ const CropPrediction = () => {
           </div>
           
           <div className="mb-8">
-            <Tabs defaultValue="input" className="w-full">
+            <Tabs 
+              value={activeTab} 
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="w-full max-w-md mx-auto">
                 <TabsTrigger value="input" className="flex-1">Input Parameters</TabsTrigger>
                 <TabsTrigger 
@@ -56,6 +64,15 @@ const CropPrediction = () => {
               
               <TabsContent value="input" className="mt-6">
                 <div className="max-w-4xl mx-auto">
+                  {!predictionData && (
+                    <Alert className="mb-6 bg-farm-sprout/10 border-farm-sprout/20">
+                      <AlertDescription>
+                        Fill in your soil and environmental parameters below to get personalized crop recommendations 
+                        best suited for your farming conditions.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div className="farm-card">
                       <div className="w-10 h-10 bg-farm-soil rounded-full mb-3 flex items-center justify-center text-white">
