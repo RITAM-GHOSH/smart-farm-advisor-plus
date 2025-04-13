@@ -1,5 +1,4 @@
-
-import { Plant, Droplets, ThermometerSun, Leaf } from "lucide-react";
+import { Seedling, Droplets, ThermometerSun, Leaf } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -8,7 +7,6 @@ interface CropResultsProps {
 }
 
 const CropResults = ({ results }: CropResultsProps) => {
-  // In a real app, these would be calculated based on the prediction model output
   const recommendedCrops = [
     {
       name: "Wheat",
@@ -83,7 +81,7 @@ const CropResults = ({ results }: CropResultsProps) => {
                   <span className="text-sm">Water Needs: {crop.details.waterNeeds}</span>
                 </div>
                 <div className="flex items-center">
-                  <Plant size={16} className="mr-2 text-farm-sprout" />
+                  <Seedling size={16} className="mr-2 text-farm-sprout" />
                   <span className="text-sm">Growth Period: {crop.details.growthPeriod}</span>
                 </div>
                 <div className="flex items-center">

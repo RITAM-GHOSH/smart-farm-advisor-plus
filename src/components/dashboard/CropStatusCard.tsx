@@ -1,5 +1,5 @@
 
-import { Plant, Droplet, Calendar, TrendingUp } from "lucide-react";
+import { Seedling, Droplet, Calendar, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
@@ -24,7 +24,7 @@ const CropStatusCard = () => {
       <CardContent>
         <div className="flex items-center mb-4">
           <div className="w-12 h-12 bg-farm-sprout/20 rounded-full flex items-center justify-center mr-4">
-            <Plant size={24} className="text-farm-sprout" />
+            <Seedling size={24} className="text-farm-sprout" />
           </div>
           <div>
             <h3 className="text-lg font-medium">{cropData.name}</h3>
