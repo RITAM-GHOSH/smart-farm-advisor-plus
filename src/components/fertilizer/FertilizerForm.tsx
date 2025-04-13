@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +23,7 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
     sulfur: 10,
     fieldSize: 5
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -40,9 +41,14 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
       toast.error("Please select both crop and soil type");
       return;
     }
+
+    setIsSubmitting(true);
     
-    onSubmit(formData);
-    toast.success("Generating fertilizer recommendations");
+    // Simulate API call delay
+    setTimeout(() => {
+      onSubmit(formData);
+      setIsSubmitting(false);
+    }, 1000);
   };
 
   const crops = [
@@ -62,11 +68,13 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="data-input">
+    <form onSubmit={handleSubmit} className="data-input space-y-6 bg-white p-6 rounded-lg border shadow-sm">
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="crop">Crop Type</Label>
+            <Label htmlFor="crop" className="flex items-center">
+              Crop Type <span className="text-red-500 ml-1">*</span>
+            </Label>
             <Select 
               value={formData.crop} 
               onValueChange={(value) => handleChange("crop", value)}
@@ -85,7 +93,9 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="soilType">Soil Type</Label>
+            <Label htmlFor="soilType" className="flex items-center">
+              Soil Type <span className="text-red-500 ml-1">*</span>
+            </Label>
             <Select 
               value={formData.soilType} 
               onValueChange={(value) => handleChange("soilType", value)}
@@ -119,7 +129,7 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
             <Input 
               type="number" 
               value={formData.fieldSize} 
-              onChange={(e) => handleChange("fieldSize", parseFloat(e.target.value))}
+              onChange={(e) => handleChange("fieldSize", parseFloat(e.target.value) || 0.5)}
               className="w-20"
               min={0.5}
               max={50}
@@ -184,7 +194,7 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
                   id="calcium"
                   type="number" 
                   value={formData.calcium} 
-                  onChange={(e) => handleChange("calcium", parseFloat(e.target.value))}
+                  onChange={(e) => handleChange("calcium", parseFloat(e.target.value) || 0)}
                   className="mt-1"
                   min={0}
                   max={100}
@@ -196,7 +206,7 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
                   id="magnesium"
                   type="number" 
                   value={formData.magnesium} 
-                  onChange={(e) => handleChange("magnesium", parseFloat(e.target.value))}
+                  onChange={(e) => handleChange("magnesium", parseFloat(e.target.value) || 0)}
                   className="mt-1"
                   min={0}
                   max={100}
@@ -208,7 +218,7 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
                   id="sulfur"
                   type="number" 
                   value={formData.sulfur} 
-                  onChange={(e) => handleChange("sulfur", parseFloat(e.target.value))}
+                  onChange={(e) => handleChange("sulfur", parseFloat(e.target.value) || 0)}
                   className="mt-1"
                   min={0}
                   max={100}
@@ -218,7 +228,13 @@ const FertilizerForm = ({ onSubmit }: FertilizerFormProps) => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full">Get Fertilizer Recommendations</Button>
+        <Button 
+          type="submit" 
+          className="w-full"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Generating Recommendations..." : "Get Fertilizer Recommendations"}
+        </Button>
       </div>
     </form>
   );

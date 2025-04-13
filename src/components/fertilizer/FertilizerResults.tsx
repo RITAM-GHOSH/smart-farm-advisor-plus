@@ -1,20 +1,25 @@
 
-import { FlaskConical, AlertCircle, Check, X } from "lucide-react";
+import { useState } from "react";
+import { FlaskConical, AlertCircle, Check, X, Download, Calendar, File } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 interface FertilizerResultsProps {
   results: any;
 }
 
 const FertilizerResults = ({ results }: FertilizerResultsProps) => {
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSettingReminders, setIsSettingReminders] = useState(false);
+
   // In a real app, this would be calculated by the prediction model
   const recommendations = [
     {
       name: "Nitrogen (N)",
       formula: "Urea (46-0-0)",
-      currentLevel: 35,
+      currentLevel: results?.nitrogen || 35,
       optimalLevel: 60,
       recommended: 45,
       units: "kg/ha",
@@ -23,7 +28,7 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
     {
       name: "Phosphorus (P)",
       formula: "Single Super Phosphate (0-16-0)",
-      currentLevel: 25,
+      currentLevel: results?.phosphorus || 25,
       optimalLevel: 30,
       recommended: 20,
       units: "kg/ha",
@@ -32,7 +37,7 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
     {
       name: "Potassium (K)",
       formula: "Muriate of Potash (0-0-60)",
-      currentLevel: 30,
+      currentLevel: results?.potassium || 30,
       optimalLevel: 25,
       recommended: 0,
       units: "kg/ha",
@@ -40,8 +45,8 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
     },
   ];
 
-  const totalFieldSize = 5; // hectares
-  const totalCost = 3500; // rupees
+  const totalFieldSize = results?.fieldSize || 5; // hectares
+  const totalCost = Math.round(3500 * (totalFieldSize / 5)); // rupees adjusted for field size
 
   const applicationSchedule = [
     {
@@ -69,6 +74,40 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
       method: "Foliar spray or side dressing"
     }
   ];
+
+  const handleDownloadGuide = () => {
+    setIsDownloading(true);
+    
+    // Simulate download delay
+    setTimeout(() => {
+      setIsDownloading(false);
+      toast.success("Fertilizer application guide downloaded successfully");
+    }, 1500);
+  };
+
+  const handleSetReminders = () => {
+    setIsSettingReminders(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      setIsSettingReminders(false);
+      toast.success("Application reminders have been set for your calendar");
+    }, 1500);
+  };
+
+  const handleGeneratePurchaseOrder = () => {
+    toast.success("Purchase order generated and ready for download");
+    
+    // Here you would typically generate and download a file
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.href = '#';
+      link.download = 'fertilizer_purchase_order.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, 1000);
+  };
 
   return (
     <div className="space-y-6">
@@ -115,7 +154,7 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
                     </div>
                     <Progress 
                       value={(rec.currentLevel / rec.optimalLevel) * 100} 
-                      className="h-2" 
+                      className={`h-2 ${rec.deficient ? 'bg-amber-100' : 'bg-green-100'}`}
                     />
                   </div>
                   
@@ -141,11 +180,17 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
               </div>
               <div className="flex justify-between">
                 <span className="text-sm">Cost per Hectare:</span>
-                <span className="font-medium">₹{totalCost / totalFieldSize}</span>
+                <span className="font-medium">₹{Math.round(totalCost / totalFieldSize)}</span>
               </div>
             </div>
             
-            <Button className="w-full mt-4">Generate Purchase Order</Button>
+            <Button 
+              className="w-full mt-4 flex items-center justify-center"
+              onClick={handleGeneratePurchaseOrder}
+            >
+              <File className="mr-2 h-4 w-4" />
+              Generate Purchase Order
+            </Button>
           </CardContent>
         </Card>
         
@@ -194,8 +239,24 @@ const FertilizerResults = ({ results }: FertilizerResultsProps) => {
             </div>
             
             <div className="flex space-x-2 mt-4">
-              <Button variant="outline" className="flex-1">Download Guide</Button>
-              <Button variant="outline" className="flex-1">Set Reminders</Button>
+              <Button 
+                variant="outline" 
+                className="flex-1 flex items-center justify-center"
+                onClick={handleDownloadGuide}
+                disabled={isDownloading}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                {isDownloading ? "Downloading..." : "Download Guide"}
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1 flex items-center justify-center"
+                onClick={handleSetReminders}
+                disabled={isSettingReminders}
+              >
+                <Calendar className="mr-2 h-4 w-4" />
+                {isSettingReminders ? "Setting..." : "Set Reminders"}
+              </Button>
             </div>
           </CardContent>
         </Card>
