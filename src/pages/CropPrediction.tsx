@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CropForm from "@/components/crop-prediction/CropForm";
 import CropResults from "@/components/crop-prediction/CropResults";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Seedling, ArrowLeft } from "lucide-react";
+import { Sprout, ArrowLeft } from 'lucide-react';
 import { Link } from "react-router-dom";
 
 const CropPrediction = () => {
@@ -31,7 +30,7 @@ const CropPrediction = () => {
             
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 rounded-full bg-farm-sprout/20 flex items-center justify-center mr-3">
-                <Seedling size={20} className="text-farm-sprout" />
+                <Sprout size={20} className="text-farm-sprout" />
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold">Crop Prediction</h1>

@@ -1,4 +1,4 @@
-import { Seedling, Droplets, ThermometerSun, Leaf } from "lucide-react";
+import { Seeds, Droplets, ThermometerSun, Leaf } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -81,7 +81,7 @@ const CropResults = ({ results }: CropResultsProps) => {
                   <span className="text-sm">Water Needs: {crop.details.waterNeeds}</span>
                 </div>
                 <div className="flex items-center">
-                  <Seedling size={16} className="mr-2 text-farm-sprout" />
+                  <Seeds size={16} className="mr-2 text-farm-sprout" />
                   <span className="text-sm">Growth Period: {crop.details.growthPeriod}</span>
                 </div>
                 <div className="flex items-center">
