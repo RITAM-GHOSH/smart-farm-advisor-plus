@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,9 +9,10 @@ import { toast } from "sonner";
 
 interface CropFormProps {
   onSubmit: (data: any) => void;
+  initialData?: any;
 }
 
-const CropForm = ({ onSubmit }: CropFormProps) => {
+const CropForm = ({ onSubmit, initialData }: CropFormProps) => {
   const [formData, setFormData] = useState({
     nitrogen: 40,
     phosphorus: 30,
@@ -23,6 +24,13 @@ const CropForm = ({ onSubmit }: CropFormProps) => {
     region: "",
     season: ""
   });
+
+  // Effect to initialize form with initialData when provided
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
