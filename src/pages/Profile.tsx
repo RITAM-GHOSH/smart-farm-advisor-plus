@@ -5,11 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Check, User, X } from "lucide-react";
+import { AlertCircle, Check, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
+
+// Define profile type to match our database schema
+type Profile = {
+  id: string;
+  name: string | null;
+  location: string | null;
+  farm_size: number | null;
+  crops: string | null;
+  updated_at: string | null;
+}
 
 const Profile = () => {
   const { user } = useAuth();
