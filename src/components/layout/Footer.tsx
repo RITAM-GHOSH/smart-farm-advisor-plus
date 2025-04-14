@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4">Smart Farm Advisor</h3>
+            <h3 className="text-lg font-semibold mb-4">ExpertAgri</h3>
             <p className="text-muted-foreground mb-4 max-w-md">
               Empowering farmers with data-driven insights for better crop selection, 
               fertilizer usage, rainfall prediction, and yield forecasting.
@@ -45,7 +45,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t mt-8 pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Smart Farm Advisor. All rights reserved.</p>
+          <p>&copy; {currentYear} ExpertAgri. All rights reserved.</p>
         </div>
       </div>
     </footer>

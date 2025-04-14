@@ -9,6 +9,7 @@ import FarmStats from "@/components/dashboard/FarmStats";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Index = () => {
   const [greeting, setGreeting] = useState("");
@@ -36,8 +37,15 @@ const Index = () => {
                 </p>
               </div>
               <div className="hidden md:flex space-x-4">
-                <Button variant="outline">Update Farm Data</Button>
-                <Button>View Alerts</Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => toast.success("Farm data updated successfully")}
+                >
+                  Update Farm Data
+                </Button>
+                <Button onClick={() => toast.info("No new alerts to display")}>
+                  View Alerts
+                </Button>
               </div>
             </div>
             

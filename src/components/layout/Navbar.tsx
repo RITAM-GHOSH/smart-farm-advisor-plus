@@ -19,7 +19,7 @@ const Navbar = () => {
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
               <div className="w-6 h-6 bg-farm-leaf rounded-full"></div>
             </div>
-            <span className="text-xl font-bold">Smart Farm Advisor</span>
+            <span className="text-xl font-bold">ExpertAgri</span>
           </Link>
 
           {/* Desktop Navigation */}
