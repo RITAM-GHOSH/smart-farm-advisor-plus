@@ -53,20 +53,33 @@ const CropForm = ({ onSubmit, initialData }: CropFormProps) => {
     toast.success("Analysis in progress");
   };
 
+  // Extended regions list
   const regions = [
     { value: "north", label: "Northern Region" },
     { value: "south", label: "Southern Region" },
     { value: "east", label: "Eastern Region" },
     { value: "west", label: "Western Region" },
-    { value: "central", label: "Central Region" }
+    { value: "central", label: "Central Region" },
+    { value: "northeast", label: "Northeastern Region" },
+    { value: "northwest", label: "Northwestern Region" },
+    { value: "southeast", label: "Southeastern Region" },
+    { value: "southwest", label: "Southwestern Region" },
+    { value: "coastal", label: "Coastal Region" },
+    { value: "highland", label: "Highland Region" },
+    { value: "lowland", label: "Lowland Region" }
   ];
 
+  // Extended seasons list
   const seasons = [
     { value: "summer", label: "Summer" },
     { value: "winter", label: "Winter" },
     { value: "monsoon", label: "Monsoon" },
     { value: "autumn", label: "Autumn" },
-    { value: "spring", label: "Spring" }
+    { value: "spring", label: "Spring" },
+    { value: "rainy", label: "Rainy" },
+    { value: "dry", label: "Dry" },
+    { value: "pre-monsoon", label: "Pre-Monsoon" },
+    { value: "post-monsoon", label: "Post-Monsoon" }
   ];
 
   return (
